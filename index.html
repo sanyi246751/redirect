@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        // 從網址取得參數
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+        // 後端 Google Apps Script URL
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzZJWyE5HUdsKp73Ep_9zH65MtMXRb4WphHjdAhTGoWyHtrUiddvniLBGZK0EBq4uiq/exec";
+
+        if (id) {
+            window.location.replace(`${GAS_URL}?id=${encodeURIComponent(id)}`);
+        } else {
+            // 沒有 ID 參數時導向預設網址
+            window.location.replace("https://www.your-target-url.com");
+        }
+    </script>
+</head>
+<body>
+    <p>正在為您轉址，如果沒有自動跳轉，請點
+       <a id="redirectLink" href="https://www.your-target-url.com">這裡</a>
+    </p>
+    <script>
+        // 更新備援連結
+        document.getElementById("redirectLink").href = id 
+            ? `${GAS_URL}?id=${encodeURIComponent(id)}` 
+            : "https://www.your-target-url.com";
+    </script>
+</body>
+</html>
