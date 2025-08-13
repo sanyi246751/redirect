@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML + Google Sheet 轉址</title>
+</head>
+<body>
+
+    <h1>正在進行轉址...</h1>
+
+    <script>
+        // 設定你的發布後的 Google Sheet 網址（CSV 格式）
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQzar9uJzMIZyy0d4dcictbUYb-MOZBiVG4x21TrMy06yDvqk4So4lcbY0VTPci-iugxv1L5r034hgr/pub?output=csv';
+
+        // 從網址中取得 ID 參數
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        if (id) {
+            fetch(sheetUrl)
+                .then(response => response.text())
+                .then(csvData => {
+                    // 將 CSV 資料解析成陣列
+                    const rows = csvData.split('\n').map(row => row.trim().split(','));
+                    let foundUrl = null;
+                    
+                    // 遍歷資料尋找 ID
+                    for (let i = 1; i < rows.length; i++) { // 從第二行開始，跳過標題
+                        if (rows[i][0] === id) {
+                            foundUrl = rows[i][1];
+                            break;
+                        }
+                    }
+
+                    if (foundUrl) {
+                        window.location.href = foundUrl;
+                    } else {
+                        // 如果找不到 ID，轉址到預設網址
+                        window.location.href = 'https://www.sanyi.gov.tw/';
+                    }
+                })
+                .catch(error => {
+                    console.error('讀取試算表資料時發生錯誤:', error);
+                    window.location.href = 'https://www.sanyi.gov.tw/';
+                });
+        } else {
+            // 如果網址沒有 ID 參數，轉址到預設網址
+            window.location.href = 'https://www.sanyi.gov.tw/';
+        }
+    </script>
+
+</body>
+</html>
