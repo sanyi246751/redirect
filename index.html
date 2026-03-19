@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HTML + Google Sheet 轉址</title>
+</head>
+
+<body>
+
+    <h1>正在進行轉址...</h1>
+
+    <script>
+        // 【重要】請把這裡換成你把上述 doGet(e) 後端發布成「網頁應用程式」後產生的新網址
+        const gasWebAppUrl = 'https://script.google.com/macros/s/AKfycbw07sKJI30fkyISwv-CxjqFALsPfEn1AHYb-eOl6oABqQRcDReZwTFdtLlLa9YBQo63/exec';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        if (id) {
+            // 背景去跟後端拿資料，使用者網址列不會閃過一大串 GAS 網址
+            fetch(`${gasWebAppUrl}?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.url) {
+                        window.location.replace(data.url);
+                    } else {
+                        window.location.replace('https://www.sanyi.gov.tw/');
+                    }
+                })
+                .catch(err => {
+                    console.error('後端讀取錯誤:', err);
+                    window.location.replace('https://www.sanyi.gov.tw/');
+                });
+        } else {
+            window.location.replace('https://www.sanyi.gov.tw/');
+        }
+    </script>
+
+</body>
+
+</html>
